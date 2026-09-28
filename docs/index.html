@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produtividade de Rotas - BI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#171d2e; --panel2:#1f2740; --line:#2a3350;
+    --tx:#e8ecf6; --mut:#8b95b5; --green:#37c98a; --red:#ff6b7a;
+    --orange:#f5993c; --blue:#4aa8ff; --purple:#b98cff; --meta:#e0c060;
+    --shadow:0 6px 20px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);
+    font-family:"Segoe UI",system-ui,Roboto,Arial,sans-serif;padding:24px;}
+  h1{margin:0;font-size:26px;letter-spacing:.3px}
+  .sub{color:var(--mut);margin:4px 0 18px;font-size:14px}
+  .top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+  select{background:var(--panel2);color:var(--tx);border:1px solid var(--line);
+    border-radius:8px;padding:8px 12px;font-size:14px}
+  label{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px;box-shadow:var(--shadow)}
+  .card .rot{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.6px}
+  .card .val{font-size:28px;font-weight:700;margin-top:6px}
+  .card .meta{font-size:12px;margin-top:4px;color:var(--mut)}
+  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+  .ok{background:rgba(55,201,138,.15);color:var(--green)}
+  .bad{background:rgba(255,107,122,.15);color:var(--red)}
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 8px;box-shadow:var(--shadow);margin-bottom:16px}
+  .box h3{margin:0 0 10px;font-size:14px;font-weight:600;color:var(--tx)}
+  .box .cv{position:relative;height:260px}
+  .dq{display:flex;flex-wrap:wrap;gap:8px}
+  .dq .item{background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    padding:8px 12px;font-size:12px}
+  .dq .item b{display:block;color:var(--mut);font-weight:500;font-size:11px;text-transform:uppercase}
+  footer{color:var(--mut);font-size:12px;margin-top:18px}
+  @media(max-width:900px){.grid,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <h1>Produtividade de Rotas</h1>
+      <div class="sub">Gestao da Jornada Liquida - indicadores de motoristas por dia</div>
+    </div>
+    <div>
+      <label for="mes">Periodo</label>
+      <select id="mes"></select>
+    </div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="grid">
+    <div class="box"><h3>JL dentro da meta (REAL) por dia</h3><div class="cv"><canvas id="cReal"></canvas></div></div>
+    <div class="box"><h3>Volume por dia (MVALID x MJL)</h3><div class="cv"><canvas id="cVol"></canvas></div></div>
+  </div>
+
+  <div class="box"><h3>Metas de tempo por dia: liberacao / rota / interno (%)</h3><div class="cv"><canvas id="cTempos"></canvas></div></div>
+
+  <div class="grid2">
+    <div class="box"><h3>JL por dia da semana</h3><div class="cv"><canvas id="cWd"></canvas></div></div>
+    <div class="box"><h3>JL por semana</h3><div class="cv"><canvas id="cSem"></canvas></div></div>
+  </div>
+
+  <div class="box"><h3>Qualidade de dados (pipeline)</h3><div class="dq" id="dq"></div></div>
+
+  <footer>Fonte: data warehouse (modelo estrela em SQLite) gerado pelo pipeline. Dados de exemplo sinteticos. Atualizado em <span id="ger"></span>.</footer>
+
+<script>
+const DADOS = {"meses": {"09/2026": {"rotulo": "Set/2026", "kpi": {"real": 0.6636, "tml": 28.1, "ptml": 0.553, "ptr": 0.6359, "pti": 0.6175, "mvalid": 217, "mjl": 144, "dias": 10}, "dias": [{"d": "01/09", "mvalid": 20, "mjl": 14, "real": 0.7, "tml": 23.7, "ptml": 0.7, "ptr": 0.55, "pti": 0.6, "wd": 3, "sem": 36}, {"d": "02/09", "mvalid": 22, "mjl": 19, "real": 0.8636, "tml": 21.8, "ptml": 0.8182, "ptr": 0.8182, "pti": 0.7273, "wd": 4, "sem": 36}, {"d": "03/09", "mvalid": 21, "mjl": 13, "real": 0.619, "tml": 26.0, "ptml": 0.619, "ptr": 0.5714, "pti": 0.619, "wd": 5, "sem": 36}, {"d": "04/09", "mvalid": 21, "mjl": 13, "real": 0.619, "tml": 31.6, "ptml": 0.4286, "ptr": 0.619, "pti": 0.4762, "wd": 6, "sem": 36}, {"d": "07/09", "mvalid": 22, "mjl": 11, "real": 0.5, "tml": 29.7, "ptml": 0.5, "ptr": 0.4545, "pti": 0.5455, "wd": 2, "sem": 37}, {"d": "08/09", "mvalid": 23, "mjl": 10, "real": 0.4348, "tml": 32.6, "ptml": 0.3478, "ptr": 0.4348, "pti": 0.8696, "wd": 3, "sem": 37}, {"d": "09/09", "mvalid": 22, "mjl": 18, "real": 0.8182, "tml": 26.9, "ptml": 0.5909, "ptr": 0.8182, "pti": 0.6364, "wd": 4, "sem": 37}, {"d": "10/09", "mvalid": 22, "mjl": 12, "real": 0.5455, "tml": 26.5, "ptml": 0.6364, "ptr": 0.5909, "pti": 0.5, "wd": 5, "sem": 37}, {"d": "11/09", "mvalid": 21, "mjl": 18, "real": 0.8571, "tml": 31.4, "ptml": 0.4286, "ptr": 0.8095, "pti": 0.619, "wd": 6, "sem": 37}, {"d": "14/09", "mvalid": 23, "mjl": 16, "real": 0.6957, "tml": 30.6, "ptml": 0.4783, "ptr": 0.6957, "pti": 0.5652, "wd": 2, "sem": 38}], "weekday": [{"nome": "seg", "real": 0.6}, {"nome": "ter", "real": 0.5581395348837209}, {"nome": "qua", "real": 0.8409090909090909}, {"nome": "qui", "real": 0.5813953488372093}, {"nome": "sex", "real": 0.7380952380952381}, {"nome": "sab", "real": null}, {"nome": "dom", "real": null}], "semana": [{"n": 36, "real": 0.7023809523809523}, {"n": 37, "real": 0.6272727272727273}, {"n": 38, "real": 0.6956521739130435}]}}, "dq": [{"verificacao": "registros_fato", "valor": "336", "status": "OK", "detalhe": "linhas na tabela fato"}, {"verificacao": "registros_motorista", "valor": "217", "status": "OK", "detalhe": "rotas de motorista"}, {"verificacao": "colaboradores_com_cpf", "valor": "100.0%", "status": "OK", "detalhe": "40 de 40 colaboradores com CPF valido"}, {"verificacao": "rotas_sem_ponto", "valor": "0.0%", "status": "OK", "detalhe": "0 rotas sem espelho de ponto casado"}, {"verificacao": "chaves_duplicadas", "valor": "0", "status": "OK", "detalhe": "pares (dia, colaborador) repetidos no fato"}, {"verificacao": "fatos_orfaos", "valor": "0", "status": "OK", "detalhe": "fatos sem data na dimensao (integridade referencial)"}, {"verificacao": "liberacao_fora_de_faixa", "valor": "0", "status": "OK", "detalhe": "rotas com liberacao <=0 ou >4h (excluidas do valido)"}, {"verificacao": "cobertura_periodo", "valor": "2026-09-01 a 2026-09-14", "status": "OK", "detalhe": "menor e maior data carregada"}], "gerado_em": "28/09/2026 16:08"};
+const META = {real:0.70, ptml:0.85, ptr:0.70, pti:0.85, tml_min:30};
+const C = {green:"#37c98a", red:"#ff6b7a", orange:"#f5993c", blue:"#4aa8ff",
+           purple:"#b98cff", meta:"#e0c060", grid:"#2a3350", mut:"#8b95b5"};
+Chart.defaults.color = C.mut;
+Chart.defaults.font.family = "Segoe UI, system-ui, Arial";
+Chart.defaults.plugins.legend.labels.boxWidth = 12;
+
+const pct = v => v==null ? "-" : (v*100).toFixed(1).replace(".",",")+"%";
+const hhmm = m => m==null ? "-" : String(Math.floor(m/60)).padStart(1,"0")+":"+String(Math.round(m%60)).padStart(2,"0");
+const cor = (v, meta, maior=true) => v==null ? C.mut : ((maior? v>=meta : v<=meta) ? C.green : C.red);
+
+let charts = {};
+function novo(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id]=new Chart(document.getElementById(id), cfg); }
+function metaLine(valor, label){ return {type:"line", label:label, data:null, borderColor:C.meta,
+  borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false}; }
+
+function gradeOpt(fmtY){ return {responsive:true, maintainAspectRatio:false,
+  scales:{x:{grid:{color:C.grid}}, y:{grid:{color:C.grid}, ticks:{callback:fmtY}}},
+  plugins:{legend:{display:true, position:"top"}}}; }
+
+function render(chave){
+  const m = DADOS.meses[chave];
+  const dias = m.dias;
+  const labels = dias.map(d=>d.d);
+
+  // cards
+  const k = m.kpi;
+  const cards = [
+    ["REAL (JL na meta)", pct(k.real), "meta "+pct(META.real), k.real>=META.real],
+    ["Caminhoes validos", k.mvalid, k.dias+" dias", true],
+    ["Dentro da JL", k.mjl, "de "+k.mvalid+" rotas", true],
+    ["TML medio", hhmm(k.tml), "meta "+META.tml_min+" min", (k.tml!=null&&k.tml<=META.tml_min)],
+    ["% TML na meta", pct(k.ptml), "meta "+pct(META.ptml), k.ptml>=META.ptml],
+    ["% TR na meta", pct(k.ptr), "meta "+pct(META.ptr), k.ptr>=META.ptr],
+    ["% TI na meta", pct(k.pti), "meta "+pct(META.pti), k.pti>=META.pti],
+  ];
+  document.getElementById("cards").innerHTML = cards.map(c=>`
+    <div class="card"><div class="rot">${c[0]}</div>
+    <div class="val" style="color:${c[3]?C.green:C.red}">${c[1]}</div>
+    <div class="meta">${c[2]} <span class="pill ${c[3]?'ok':'bad'}">${c[3]?'na meta':'abaixo'}</span></div></div>`).join("");
+
+  // REAL por dia
+  novo("cReal", {data:{labels, datasets:[
+      {type:"bar", label:"REAL", data:dias.map(d=>d.real),
+       backgroundColor:dias.map(d=>cor(d.real,META.real)), borderRadius:4},
+      {type:"line", label:"meta 70%", data:dias.map(()=>META.real),
+       borderColor:C.meta, borderDash:[6,4], borderWidth:1.5, pointRadius:0}
+    ]}, options:gradeOpt(v=>Math.round(v*100)+"%")});
+
+  // Volume MVALID x MJL
+  novo("cVol", {type:"bar", data:{labels, datasets:[
+      {label:"MVALID", data:dias.map(d=>d.mvalid), backgroundColor:C.blue, borderRadius:4},
+      {label:"MJL", data:dias.map(d=>d.mjl), backgroundColor:C.green, borderRadius:4}
+    ]}, options:gradeOpt(v=>v)});
+
+  // %TML / %TR / %TI
+  novo("cTempos", {type:"line", data:{labels, datasets:[
+      {label:"% TML", data:dias.map(d=>d.ptml), borderColor:C.orange, tension:.3, pointRadius:2},
+      {label:"% TR", data:dias.map(d=>d.ptr), borderColor:C.purple, tension:.3, pointRadius:2},
+      {label:"% TI", data:dias.map(d=>d.pti), borderColor:C.blue, tension:.3, pointRadius:2}
+    ]}, options:gradeOpt(v=>Math.round(v*100)+"%")});
+
+  // por dia da semana
+  novo("cWd", {type:"bar", data:{labels:m.weekday.map(w=>w.nome), datasets:[
+      {label:"REAL", data:m.weekday.map(w=>w.real),
+       backgroundColor:m.weekday.map(w=>cor(w.real,META.real)), borderRadius:4}
+    ]}, options:{...gradeOpt(v=>Math.round(v*100)+"%"), plugins:{legend:{display:false}}}});
+
+  // por semana
+  novo("cSem", {type:"bar", data:{labels:m.semana.map(s=>"S"+s.n), datasets:[
+      {label:"REAL", data:m.semana.map(s=>s.real),
+       backgroundColor:m.semana.map(s=>cor(s.real,META.real)), borderRadius:4}
+    ]}, options:{...gradeOpt(v=>Math.round(v*100)+"%"), plugins:{legend:{display:false}}}});
+}
+
+// DQ
+document.getElementById("dq").innerHTML = DADOS.dq.map(d=>`
+  <div class="item"><b>${d.verificacao}</b>${d.valor}
+  <span class="pill ${d.status==='OK'?'ok':'bad'}">${d.status}</span></div>`).join("");
+document.getElementById("ger").textContent = DADOS.gerado_em;
+
+// seletor de mes
+const sel = document.getElementById("mes");
+const chaves = Object.keys(DADOS.meses);
+sel.innerHTML = chaves.map(c=>`<option value="${c}">${DADOS.meses[c].rotulo}</option>`).join("");
+sel.value = chaves[chaves.length-1];
+sel.onchange = ()=>render(sel.value);
+render(sel.value);
+</script>
+</body>
+</html>
