@@ -167,8 +167,6 @@ _TEMPLATE = r"""<!DOCTYPE html>
 
   <div class="box"><h3>Qualidade de dados (pipeline)</h3><div class="dq" id="dq"></div></div>
 
-  <footer>Fonte: data warehouse (modelo estrela em SQLite) gerado pelo pipeline. Dados de exemplo sinteticos. Atualizado em <span id="ger"></span>.</footer>
-
 <script>
 const DADOS = __DADOS__;
 const META = {real:0.70, ptml:0.85, ptr:0.70, pti:0.85, tml_min:30};
@@ -250,7 +248,6 @@ function render(chave){
 document.getElementById("dq").innerHTML = DADOS.dq.map(d=>`
   <div class="item"><b>${d.verificacao}</b>${d.valor}
   <span class="pill ${d.status==='OK'?'ok':'bad'}">${d.status}</span></div>`).join("");
-document.getElementById("ger").textContent = DADOS.gerado_em;
 
 // seletor de mes
 const sel = document.getElementById("mes");
