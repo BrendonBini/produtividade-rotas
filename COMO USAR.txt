@@ -1,0 +1,175 @@
+====================================================================
+ JORNADA LÍQUIDA - Analisador de Tempos (Motorista / Ajudante)
+====================================================================
+
+O QUE O PROGRAMA FAZ
+--------------------
+Cruza os horários do 2 ART (Promax) com o espelho de ponto (Pontomais),
+usando o CPF como chave de ligação, e gera um relatório em Excel com as
+diferenças de horário por pessoa e por dia.
+
+Não precisa instalar nada. Não precisa de Python.
+Basta abrir:  "Jornada Liquida.exe"
+
+
+>> OS CADASTROS FICAM SALVOS <<
+-------------------------------
+Você importa (ou digita) os cadastros UMA VEZ. Eles ficam guardados no
+computador e já aparecem carregados nas próximas vezes que abrir.
+
+No DIA A DIA você só usa a aba "Gerar Relatório" e importa 2 arquivos:
+   - o 2 ART (do dia OU de um período/mês)
+   - o Espelho de Jornada (ponto) (do dia OU de um período/mês)
+
+
+>> FUNCIONA DIÁRIO E MENSAL (PERÍODO) <<
+----------------------------------------
+Você pode gerar tanto de um único dia quanto de um período (mês inteiro).
+Basta que o 2 ART e o Espelho de Jornada sejam do MESMO período.
+   - No 2 ART, cada linha já tem a sua data.
+   - No Espelho, cada colaborador tem uma linha por dia.
+O relatório sai com UMA LINHA POR PESSOA POR DIA, e o dashboard resume o
+período (médias por pessoa, rankings, etc.). A tabela de detalhe tem a
+coluna Data para você filtrar/ordenar por dia.
+
+
+>> A BASE VAI DENTRO DO .EXE (USAR EM OUTRO PC) <<
+--------------------------------------------------
+Os cadastros já vêm EMBUTIDOS dentro do "Jornada Liquida.exe".
+Se você copiar só o .exe para outro computador, ao abrir pela
+primeira vez ele já cria a base com todos os cadastros - NÃO precisa
+importar de novo.
+
+Se você ATUALIZAR os cadastros num PC e quiser levar a versão nova
+para os outros:
+   Menu "Base de cadastros" > "Exportar base..."  -> gera um arquivo
+   Leve esse arquivo para o outro PC e use "Importar base...".
+(A base atual de cada PC fica em:
+ C:\Users\<usuário>\AppData\Local\JornadaLiquida\cadastros.json)
+
+
+AS ABAS DO PROGRAMA
+-------------------
+1) GERAR RELATÓRIO
+   - Mostra quantos cadastros estão salvos.
+   - Importe o 2 ART (.csv) e o Espelho de Jornada (.xlsx).
+   - Clique em "Gerar Relatório em Excel" e escolha onde salvar.
+
+2) MOTORISTAS   /   3) AJUDANTES  (cadastros separados)
+   - "Importar cadastro (CSV do Promax)": carrega/atualiza a lista.
+   - Formulário (Código, Nome, CPF): inclui um novo ou edita.
+        * Clique numa linha da lista para preencher o formulário e editar.
+        * "Adicionar / Salvar" grava; "Remover selecionado" apaga um.
+   - A lista mostra todos os cadastrados.
+   - Tudo é salvo automaticamente.
+
+4) COLABORADORES (PONTO)
+   - Liga o CPF ao nome que aparece no espelho de ponto.
+   - "Importar colaboradores (Excel do Pontomais)": use o
+     "Relatório de Colaboradores" exportado COM a coluna CPF.
+   - Também dá para incluir/editar manualmente (CPF + Nome).
+
+
+CADEIA DE LIGAÇÃO (por CPF)
+---------------------------
+   2 ART (código)
+      -> Cadastro Motoristas/Ajudantes (código -> CPF)
+         -> Colaboradores do Ponto      (CPF    -> nome)
+            -> Espelho de Jornada        (nome   -> entrada/saída/almoço)
+
+Motorista e ajudante têm cadastros SEPARADOS, então não há confusão
+quando um ajudante tem o mesmo código de um motorista.
+
+
+O QUE CADA COLUNA DO RELATÓRIO SIGNIFICA
+----------------------------------------
+Entrada Ponto ........ hora que bateu o ponto ao chegar (1ª Entrada)
+Saída Caminhão ....... hora que o caminhão saiu (HrSai no 2 ART)
+Espera antes da rota . Saída Caminhão  -  Entrada Ponto
+Chegada Caminhão ..... hora que o caminhão voltou (HrEntr no 2 ART)
+Tempo em Rota ........ Chegada Caminhão  -  Saída Caminhão
+Almoço ............... intervalo do espelho de ponto
+JORNADA LÍQUIDA ...... Tempo em Rota  -  Almoço  (tempo trabalhado NA ROTA)
+                       >> é ESTA que se compara com o Tempo Previsto <<
+Tempo Previsto ....... tempo previsto de rota (TempoPrev no 2 ART)
+Jornada Liq - Prev ... Jornada Líquida - Tempo Previsto
+                       (NEGATIVO = fez mais rápido que o previsto)
+Cumpriu Previsto ..... Sim se Jornada Líquida <= Previsto; senão Não
+Saída Ponto .......... hora que bateu o ponto ao ir embora
+Espera após a rota ... Saída Ponto  -  Chegada Caminhão
+Jornada Total (ponto)  Saída Ponto - Entrada Ponto - Almoço
+                       (é o dia INTEIRO do ponto - almoço, inclui as
+                        esperas; é uma métrica separada, não a jornada
+                        líquida)
+
+* Horário NEGATIVO (ex: -00:55) = os horários do ponto e do caminhão
+  não batem naquele dia. Vale conferir.
+
+
+ABAS DO EXCEL GERADO
+--------------------
+- Dashboard ..... painel INTERATIVO (BI) dentro do Excel, tema escuro:
+                  * Cartões de KPI no topo (pessoas, médias, % que
+                    cumpriram o tempo previsto)
+                  * Filtro "Tipo" (Motorista/Ajudante) - clique para filtrar
+                    os gráficos E a lista de colaboradores (mostra só os do
+                    tipo escolhido)
+                  * Lista "COLABORADOR" - clique em um ou vários nomes e os
+                    gráficos passam a mostrar SÓ eles; sem nada selecionado,
+                    os gráficos ficam no Top 10 automático. (Para limpar a
+                    seleção, use o funil no canto da lista.)
+                  * Gráficos dinâmicos: Top 10 espera para iniciar a rota,
+                    Top 10 espera após a rota, Top 10 jornada líquida,
+                    Top 10 que cumpriram/bateram o tempo previsto, e
+                    Comparativo Motoristas x Ajudantes
+                  * Tabela de detalhe por pessoa em HH:MM - clique na
+                    setinha do cabeçalho para FILTRAR (por nome, por
+                    Cumpriu, etc.) ou ORDENAR por tempo
+                  (os gráficos reagem ao filtro de Tipo; valores dos
+                   gráficos em minutos, tabela de detalhe em HH:MM)
+
+  ANÁLISE DE TEMPO PREVISTO (do 2 ART, coluna TempoPrev):
+     O sistema compara o TEMPO PREVISTO da rota com a ROTA LÍQUIDA
+     (tempo em rota - almoço), para ver se cada um cumpriu o previsto.
+     Colunas: "Tempo Previsto", "Dif vs Previsto" (negativo = fez mais
+     rápido) e "Cumpriu" (Sim/Não). O gráfico "cumpriram/bateram o
+     previsto" ranqueia quem fez em MENOR tempo (mais minutos
+     economizados). Só entra quem tem ponto válido (o cálculo depende
+     do almoço do ponto).
+
+  IMPORTANTE: se o arquivo Excel que você vai gerar JÁ ESTIVER ABERTO no
+        Excel, o programa não consegue substituir (o Windows bloqueia o
+        arquivo). Feche o Excel antes de gerar de novo, ou salve com outro
+        nome. O programa avisa quando isso acontece.
+
+  OBS.: o painel interativo é montado usando o Excel do seu PC. Se em algum
+        computador o Excel não estiver disponível, o programa gera um
+        Dashboard mais simples (estático) no lugar - o restante funciona igual.
+
+- Motoristas .... uma linha por motorista por dia
+- Ajudantes ..... uma linha por ajudante por dia
+- Conferência ... quem não foi possível cruzar, com o motivo
+                  (ex.: CPF fake de diarista/frete, ou CPF que não
+                  está no cadastro de colaboradores do Pontomais).
+
+
+ONDE OS CADASTROS FICAM SALVOS
+------------------------------
+C:\Users\<seu usuário>\AppData\Local\JornadaLiquida\cadastros.json
+(não precisa mexer nesse arquivo; o programa cuida dele)
+
+
+ARQUIVOS DESTA PASTA
+--------------------
+Jornada Liquida.exe .... o programa (é só isto que você usa/leva)
+app.py ................. código-fonte da tela
+jornada_liquida.py ..... código-fonte dos cálculos
+armazenamento.py ....... código-fonte do "salvar cadastros"
+cadastros_base.json .... a base que fica embutida no .exe (semente)
+COMO USAR.txt .......... este guia
+
+Para gerar o .exe de novo (se mexer no código), com Python instalado:
+   pip install pyinstaller openpyxl
+   pyinstaller --onefile --windowed --name "Jornada Liquida" ^
+       --add-data "cadastros_base.json;." app.py
+====================================================================

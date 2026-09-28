@@ -1,0 +1,208 @@
+{
+  "motoristas": {
+    "101": {
+      "nome": "RENATO SOUZA SILVA",
+      "cpf": "90000000137"
+    },
+    "102": {
+      "nome": "WESLEY RIBEIRO COSTA",
+      "cpf": "90000000274"
+    },
+    "103": {
+      "nome": "RAFAEL PEREIRA SOUZA",
+      "cpf": "90000000411"
+    },
+    "104": {
+      "nome": "SERGIO BARBOSA OLIVEIRA",
+      "cpf": "90000000548"
+    },
+    "105": {
+      "nome": "MARCELO CARVALHO SANTOS",
+      "cpf": "90000000685"
+    },
+    "106": {
+      "nome": "ANTONIO OLIVEIRA FERREIRA",
+      "cpf": "90000000822"
+    },
+    "107": {
+      "nome": "RAFAEL MENDES SILVA",
+      "cpf": "90000000959"
+    },
+    "108": {
+      "nome": "VINICIUS FERREIRA BARBOSA",
+      "cpf": "90000001096"
+    },
+    "109": {
+      "nome": "GUSTAVO COSTA ALMEIDA",
+      "cpf": "90000001233"
+    },
+    "110": {
+      "nome": "MARCELO RIBEIRO SILVA",
+      "cpf": "90000001370"
+    },
+    "111": {
+      "nome": "DOUGLAS LIMA CARVALHO",
+      "cpf": "90000001507"
+    },
+    "112": {
+      "nome": "RODRIGO RIBEIRO PEREIRA",
+      "cpf": "90000001644"
+    },
+    "113": {
+      "nome": "PEDRO GOMES SOUZA",
+      "cpf": "90000001781"
+    },
+    "114": {
+      "nome": "CARLOS ROCHA SOUZA",
+      "cpf": "90000001918"
+    },
+    "115": {
+      "nome": "EDUARDO MARTINS RIBEIRO",
+      "cpf": "90000002055"
+    },
+    "116": {
+      "nome": "JOSE ALMEIDA BARBOSA",
+      "cpf": "90000002192"
+    },
+    "117": {
+      "nome": "PAULO ROCHA OLIVEIRA",
+      "cpf": "90000002329"
+    },
+    "118": {
+      "nome": "VINICIUS ALVES MARTINS",
+      "cpf": "90000002466"
+    },
+    "119": {
+      "nome": "MARCELO FERREIRA OLIVEIRA",
+      "cpf": "90000002603"
+    },
+    "120": {
+      "nome": "JOSE COSTA ALVES",
+      "cpf": "90000002740"
+    },
+    "121": {
+      "nome": "CARLOS COSTA SOUZA",
+      "cpf": "90000002877"
+    },
+    "122": {
+      "nome": "FABIO RIBEIRO ALMEIDA",
+      "cpf": "90000003014"
+    },
+    "123": {
+      "nome": "RENATO MARTINS LIMA",
+      "cpf": "90000003151"
+    },
+    "124": {
+      "nome": "EDUARDO MARTINS FERREIRA",
+      "cpf": "90000003288"
+    },
+    "125": {
+      "nome": "SERGIO RIBEIRO OLIVEIRA",
+      "cpf": "90000003425"
+    }
+  },
+  "ajudantes": {
+    "201": {
+      "nome": "DIEGO LIMA BARBOSA",
+      "cpf": "90000003562"
+    },
+    "202": {
+      "nome": "WESLEY COSTA LIMA",
+      "cpf": "90000003699"
+    },
+    "203": {
+      "nome": "LEANDRO ROCHA RIBEIRO",
+      "cpf": "90000003836"
+    },
+    "204": {
+      "nome": "RENATO BARBOSA COSTA",
+      "cpf": "90000003973"
+    },
+    "205": {
+      "nome": "SERGIO GOMES SANTOS",
+      "cpf": "90000004110"
+    },
+    "206": {
+      "nome": "RAFAEL SANTOS GOMES",
+      "cpf": "90000004247"
+    },
+    "207": {
+      "nome": "FABIO RIBEIRO OLIVEIRA",
+      "cpf": "90000004384"
+    },
+    "208": {
+      "nome": "PEDRO GOMES FERREIRA",
+      "cpf": "90000004521"
+    },
+    "209": {
+      "nome": "RENATO NUNES ROCHA",
+      "cpf": "90000004658"
+    },
+    "210": {
+      "nome": "RENATO ALMEIDA PEREIRA",
+      "cpf": "90000004795"
+    },
+    "211": {
+      "nome": "BRUNO PEREIRA COSTA",
+      "cpf": "90000004932"
+    },
+    "212": {
+      "nome": "WESLEY BARBOSA BARBOSA",
+      "cpf": "90000005069"
+    },
+    "213": {
+      "nome": "BRUNO CARVALHO ROCHA",
+      "cpf": "90000005206"
+    },
+    "214": {
+      "nome": "EDUARDO COSTA PEREIRA",
+      "cpf": "90000005343"
+    },
+    "215": {
+      "nome": "TIAGO NUNES OLIVEIRA",
+      "cpf": "90000005480"
+    }
+  },
+  "colaboradores": {
+    "90000000137": "RENATO SOUZA SILVA",
+    "90000000274": "WESLEY RIBEIRO COSTA",
+    "90000000411": "RAFAEL PEREIRA SOUZA",
+    "90000000548": "SERGIO BARBOSA OLIVEIRA",
+    "90000000685": "MARCELO CARVALHO SANTOS",
+    "90000000822": "ANTONIO OLIVEIRA FERREIRA",
+    "90000000959": "RAFAEL MENDES SILVA",
+    "90000001096": "VINICIUS FERREIRA BARBOSA",
+    "90000001233": "GUSTAVO COSTA ALMEIDA",
+    "90000001370": "MARCELO RIBEIRO SILVA",
+    "90000001507": "DOUGLAS LIMA CARVALHO",
+    "90000001644": "RODRIGO RIBEIRO PEREIRA",
+    "90000001781": "PEDRO GOMES SOUZA",
+    "90000001918": "CARLOS ROCHA SOUZA",
+    "90000002055": "EDUARDO MARTINS RIBEIRO",
+    "90000002192": "JOSE ALMEIDA BARBOSA",
+    "90000002329": "PAULO ROCHA OLIVEIRA",
+    "90000002466": "VINICIUS ALVES MARTINS",
+    "90000002603": "MARCELO FERREIRA OLIVEIRA",
+    "90000002740": "JOSE COSTA ALVES",
+    "90000002877": "CARLOS COSTA SOUZA",
+    "90000003014": "FABIO RIBEIRO ALMEIDA",
+    "90000003151": "RENATO MARTINS LIMA",
+    "90000003288": "EDUARDO MARTINS FERREIRA",
+    "90000003425": "SERGIO RIBEIRO OLIVEIRA",
+    "90000003562": "DIEGO LIMA BARBOSA",
+    "90000003699": "WESLEY COSTA LIMA",
+    "90000003836": "LEANDRO ROCHA RIBEIRO",
+    "90000003973": "RENATO BARBOSA COSTA",
+    "90000004110": "SERGIO GOMES SANTOS",
+    "90000004247": "RAFAEL SANTOS GOMES",
+    "90000004384": "FABIO RIBEIRO OLIVEIRA",
+    "90000004521": "PEDRO GOMES FERREIRA",
+    "90000004658": "RENATO NUNES ROCHA",
+    "90000004795": "RENATO ALMEIDA PEREIRA",
+    "90000004932": "BRUNO PEREIRA COSTA",
+    "90000005069": "WESLEY BARBOSA BARBOSA",
+    "90000005206": "BRUNO CARVALHO ROCHA",
+    "90000005343": "EDUARDO COSTA PEREIRA",
+    "90000005480": "TIAGO NUNES OLIVEIRA"
+  }
+}

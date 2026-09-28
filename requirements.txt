@@ -1,0 +1,6 @@
+# Leitura/escrita de Excel (relatorio e dashboard)
+openpyxl>=3.1
+
+# Automacao do Excel para o dashboard interativo (Windows).
+# Opcional: sem ele o sistema gera um dashboard estatico de fallback.
+pywin32>=306 ; sys_platform == "win32"

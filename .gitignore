@@ -1,0 +1,24 @@
+# Executavel e artefatos de build (o .exe embute dados; nunca versionar)
+*.exe
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+*.pyo
+
+# Saidas geradas pelo sistema
+*.xlsx
+*.db
+*_bi/
+!exemplos/ponto_exemplo.xlsx
+
+# Base de trabalho local (dados reais ficam so na maquina, nunca no repo)
+cadastros.json
+*.local.json
+
+# Editores / sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
